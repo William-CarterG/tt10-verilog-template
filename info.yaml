@@ -1,9 +1,9 @@
 # Tiny Tapeout project information
 project:
-  title:        ""      # Project title
-  author:       ""      # Your name
+  title:        "4-bit Multiplier"      # Project title
+  author:       "Nick Pham, Nathan Macapinlac"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""      # One line description of what your project does
+  description:  "4-bit multiplier for NYU's digital logic course's Lab 4"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
 
@@ -11,7 +11,7 @@ project:
   tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
-  top_module:  "tt_um_example"
+  top_module:  "tt_um_four_bit_multiplier_nasan016_npham2003"
 
   # List your project's source files here.
   # Source files must be in ./src and you must list each source file separately, one per line.
@@ -22,24 +22,24 @@ project:
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
   # Inputs
-  ui[0]: ""
-  ui[1]: ""
-  ui[2]: ""
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
-  ui[6]: ""
-  ui[7]: ""
+  ui[0]: "m[0]"
+  ui[1]: "m[1]"
+  ui[2]: "m[2]"
+  ui[3]: "m[3]"
+  ui[4]: "q[0]"
+  ui[5]: "q[1]"
+  ui[6]: "q[2]"
+  ui[7]: "q[3]"
 
   # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
+  uo[0]: "p[0]"
+  uo[1]: "p[1]"
+  uo[2]: "p[2]"
+  uo[3]: "p[3]"
+  uo[4]: "p[4]"
+  uo[5]: "p[5]"
+  uo[6]: "p[6]"
+  uo[7]: "p[7]"
 
   # Bidirectional pins
   uio[0]: ""
