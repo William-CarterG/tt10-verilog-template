@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2024 Modified Code
  * SPDX-License-Identifier: Apache-2.0
  */
 
 `default_nettype none
 
-module tt_um_four_bit_multiplier_nasan016_npham2003 (
+module tt_um_four_bit_adder (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -16,38 +16,36 @@ module tt_um_four_bit_multiplier_nasan016_npham2003 (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-    wire [3:0] m = ui_in [3:0];
-    wire [3:0] q = ui_in [7:4];
-    wire [12:0]temp_carry;
-    wire [12:0]temp_adds;
-    wire [7:0] p;
+    wire [3:0] a = ui_in [3:0];   // First 4-bit number
+    wire [3:0] b = ui_in [7:4];   // Second 4-bit number
+    wire [4:0] sum;               // 5-bit sum result
+    wire [3:0] carry;             // Carry bits
     
-    assign p[0] = m[0] & q[0];
+    // First bit addition
+    full_adder fa0(a[0], b[0], 1'b0, sum[0], carry[0]);
+    
+    // Second bit addition
+    full_adder fa1(a[1], b[1], carry[0], sum[1], carry[1]);
+    
+    // Third bit addition
+    full_adder fa2(a[2], b[2], carry[1], sum[2], carry[2]);
+    
+    // Fourth bit addition
+    full_adder fa3(a[3], b[3], carry[2], sum[3], carry[3]);
+    
+    // Final carry becomes the MSB of the sum
+    assign sum[4] = carry[3];
+    
+    // Connect sum to output
+    assign uo_out = {3'b000, sum};  // First 3 bits are unused, followed by 5-bit sum
+    
+    // Unused outputs
+    assign uio_out = 0;
+    assign uio_oe = 0;
 
-    full_adder f1((m[1] & q[0]), (m[0] & q[1]), 0, p[1], temp_carry[0]);
-    full_adder f2((m[2] & q[0]), (m[1] & q[1]), temp_carry[0], temp_adds[0], temp_carry[1]);
-    full_adder f3((m[3] & q[0]), (m[2] & q[1]), temp_carry[1], temp_adds[1], temp_carry[2]);
-    full_adder f4(0, (m[3] & q[1]), temp_carry[2], temp_adds[2], temp_carry[3]);
-    
-    
-    full_adder f5(temp_adds[0], (m[0] & q[2]), 0, p[2], temp_carry[4]);
-    full_adder f6(temp_adds[1], (m[1] & q[2]), temp_carry[4], temp_adds[3], temp_carry[5]);
-    full_adder f7(temp_adds[2], (m[2] & q[2]), temp_carry[5], temp_adds[4], temp_carry[6]);
-    full_adder f8(temp_carry[3], (m[3] & q[2]), temp_carry[6], temp_adds[5], temp_carry[7]);
-    
-    full_adder f9(temp_adds[3], (m[0] & q[3]), 0, p[3], temp_carry[8]);
-    full_adder f10(temp_adds[4], (m[1] & q[3]), temp_carry[8], p[4], temp_carry[9]);
-    full_adder f11(temp_adds[5], (m[2] & q[3]), temp_carry[9], p[5], temp_carry[10]);
-    full_adder f12(temp_carry[7], (m[3] & q[3]), temp_carry[10], p[6], p[7]);
-    assign uo_out = p;
-      assign uio_out = 0;
-  assign uio_oe  = 0;
-
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, uio_in, 1'b0};
+    // List all unused inputs to prevent warnings
+    wire _unused = &{ena, clk, rst_n, uio_in, 1'b0};
 endmodule
-
-
 
 module full_adder (a, b, c, dout, carry);
     input a;
@@ -57,5 +55,5 @@ module full_adder (a, b, c, dout, carry);
     output carry;
 
     assign dout = a ^ b ^ c;   
-    assign carry = (a &b ) | (c & (a^b));
+    assign carry = (a & b) | (c & (a ^ b));
 endmodule
